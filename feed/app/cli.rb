@@ -45,9 +45,20 @@ class CLI
   #   displays content of selected recipe
     def select_and_show_recipe
       selection = @prompt.select("Please select a recipe:", (@rec_titles))
-      selected_rec = @rec.find { |recipe| recipe.title == selection }
-      puts selected_rec.content
+      @selected_rec = @rec.find { |recipe| recipe.title == selection }
+      puts @selected_rec.content
     end
+
+#   Ask usr if they want to save
+#   Create new user recipe if yes
+    def save?
+    ans = @prompt.yes?("Would you like to save #{@selected_rec.title} recipe to your recipe book?")
+    if ans
+      @user.save_recipe(@selected_rec)
+    else
+      find_recipe
+    end
+  end
 
 #   asks user if they want to search again
   def search_again?
@@ -62,6 +73,7 @@ class CLI
   def find_recipe
     search_ingredient
     display_search_results
+    save?
     search_again?
   end
 
