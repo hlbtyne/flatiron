@@ -54,3 +54,5 @@ r7.create_recipe_ingredients(soy, cod, spring_onion, chilli)
 r8.create_recipe_ingredients(soy, noodles, beans, sugar, egg, chilli)
 r9.create_recipe_ingredients(egg, sugar)
 r10.create_recipe_ingredients(pastry, egg, sugar, strawberry)
+
+r2.update(content: "Chop and fry onions. Add beef and chilli. Cook. Serve. Eat. Enjoy.")
