@@ -55,8 +55,9 @@ class CLI
     ans = @prompt.yes?("Would you like to save #{@selected_rec.title} recipe to your recipe book?")
     if ans
       @user.save_recipe(@selected_rec)
+      search_again?
     else
-      find_recipe
+      search_again?
     end
   end
 
@@ -74,7 +75,6 @@ class CLI
     search_ingredient
     display_search_results
     save?
-    search_again?
   end
 
   def run
