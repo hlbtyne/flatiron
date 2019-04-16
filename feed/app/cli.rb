@@ -19,8 +19,14 @@ class CLI
     ans = @prompt.select("Choose an option", (options))
     if ans == "View recipe book"
       user_recipes = @user.view_recipe_book
-      select_and_show_recipe(user_recipes)
+      select_recipe_from_book(user_recipes)
     end
+  end
+
+  def select_recipe_from_book(recipes)
+    selection = @prompt.select("Please select a recipe:", (recipes))
+    @selected_rec = @user.recipes.find { |recipe| recipe.title == selection }
+    puts @selected_rec.content
   end
 
 #   prompts user for search term and gets search term
@@ -33,6 +39,11 @@ class CLI
     RecipeIngredient.all.select { |ri| ri.ingredient.name == @ing }
   end
 
+#   maps over recipe ingredients to create array of recipe instances
+  def recipe_instances
+    recipe_ingredients.map { |ri| ri.recipe }
+  end
+
   #   returns relevant recipes based on search term
   #   gives error message if search term has no matches
   def display_search_results
@@ -42,16 +53,15 @@ class CLI
       search_ingredient
       rec_ing = recipe_ingredients
     end
-    @rec = rec_ing.map { |ri| ri.recipe }
-    rec_titles = @rec.map { |r| r.title }
-    select_and_show_recipe(rec_titles)
+    rec_titles = recipe_instances.map { |r| r.title }
+    select_recipe_from_search(rec_titles)
   end
 
   #   prompts user to select a recipe from list
   #   displays content of selected recipe
-    def select_and_show_recipe(recipes)
+    def select_recipe_from_search(recipes)
       selection = @prompt.select("Please select a recipe:", (recipes))
-      @selected_rec = @rec.find { |recipe| recipe.title == selection }
+      @selected_rec = recipe_instances.find { |recipe| recipe.title == selection }
       puts @selected_rec.content
     end
 
