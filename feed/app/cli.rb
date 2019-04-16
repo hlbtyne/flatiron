@@ -23,6 +23,8 @@ class CLI
     end
   end
 
+  #   prompts user to select a recipe from recipe book
+  #   displays content of selected recipe
   def select_recipe_from_book(recipes)
     selection = @prompt.select("Please select a recipe:", (recipes))
     @selected_rec = @user.recipes.find { |recipe| recipe.title == selection }
@@ -57,7 +59,7 @@ class CLI
     select_recipe_from_search(rec_titles)
   end
 
-  #   prompts user to select a recipe from list
+  #   prompts user to select a recipe from list of search results
   #   displays content of selected recipe
     def select_recipe_from_search(recipes)
       selection = @prompt.select("Please select a recipe:", (recipes))
@@ -100,16 +102,3 @@ class CLI
   end
 
 end
-
-
-
-  #
-  # save?
-  #   asks user if they want to save recipe to recipe book
-  #   if yes- create new user_recipe instance
-  #   if no- ask user to search again
-  #
-
-  # search_again
-  #   if yes back to search
-  #   else Bye!
