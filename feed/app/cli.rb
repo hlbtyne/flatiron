@@ -18,7 +18,8 @@ class CLI
     options = ["View recipe book", "Search by ingredient"]
     ans = @prompt.select("Choose an option", (options))
     if ans == "View recipe book"
-      @user.view_recipe_book
+      user_recipes = @user.view_recipe_book
+      select_and_show_recipe(user_recipes)
     end
   end
 
@@ -42,14 +43,14 @@ class CLI
       rec_ing = recipe_ingredients
     end
     @rec = rec_ing.map { |ri| ri.recipe }
-    @rec_titles = @rec.map { |r| r.title }
-    select_and_show_recipe
+    rec_titles = @rec.map { |r| r.title }
+    select_and_show_recipe(rec_titles)
   end
 
-  #   prompts user to select a recipe fo list
+  #   prompts user to select a recipe from list
   #   displays content of selected recipe
-    def select_and_show_recipe
-      selection = @prompt.select("Please select a recipe:", (@rec_titles))
+    def select_and_show_recipe(recipes)
+      selection = @prompt.select("Please select a recipe:", (recipes))
       @selected_rec = @rec.find { |recipe| recipe.title == selection }
       puts @selected_rec.content
     end

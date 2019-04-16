@@ -10,6 +10,5 @@ class User < ActiveRecord::Base
      user_rec = self.user_recipes
      recipes = user_rec.map { |r| r.recipe }
      my_rec_titles = recipes.map { |r| r.title }
-     puts my_rec_titles
   end
 end
