@@ -14,7 +14,12 @@ class CLI
 
 #   greets user
   def greet
-      puts "Hi #{@user.name},"
+    puts "Hi #{@user.name}!"
+    options = ["View recipe book", "Search by ingredient"]
+    ans = @prompt.select("Choose an option", (options))
+    if ans == "View recipe book"
+      @user.view_recipe_book
+    end
   end
 
 #   prompts user for search term and gets search term
