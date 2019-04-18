@@ -6,13 +6,26 @@ class CLI
 
  #   Gets user's name
    def get_user_name
-     name = @prompt.ask("Whats your name? ")
+     name = @prompt.ask("What's your name? ")
      name
    end
 
+  def print_title
+        puts ''
+        puts "*** -- WELCOME TO -- ***"
+        puts ''
+        sleep(2)
+        app_title = Artii::Base.new :font => 'slant'
+        puts '-------------------------------------------'
+        puts app_title.asciify('Feed').colorize(:color => :green)
+        puts '-------------------------------------------'
+
+        app_title
+        sleep(2)
+  end
+
  #  asks user for name and finds or creates user in db
   def find_or_create_user
-    puts "Welcome to Feed!"
     name = get_user_name
     while name == nil
       puts "Please enter a valid name."
@@ -138,6 +151,7 @@ class CLI
   end
 
   def run
+    print_title
     find_or_create_user
     greet
     main_menu
