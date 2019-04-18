@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
 #   Saves a recipe to the user's recipe book by creating a user recipe instance
   def save_recipe(recipe)
     UserRecipe.find_or_create_by(user_id: self.id, recipe_id: recipe.id)
+    self.view_recipe_book
   end
 
   def view_recipe_book
