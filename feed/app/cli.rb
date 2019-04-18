@@ -6,7 +6,7 @@ class CLI
 
  #   Gets user's name
    def get_user_name
-     name = @prompt.ask("What's your name? ")
+     name = @prompt.ask("What's your name? ".colorize(:color => :blue))
      name
    end
 
@@ -28,7 +28,9 @@ class CLI
   def find_or_create_user
     name = get_user_name
     while name == nil
-      puts "Please enter a valid name."
+      puts ''
+      puts "*** Please enter a valid name. ***".colorize(:color => :red)
+      puts ''
       name = get_user_name
     end
     @user = User.find_or_create_by(name: name)
@@ -37,31 +39,35 @@ class CLI
 
 #   greets user
   def greet
+    puts ''
     puts "Hi #{@user.name}!"
+    puts ''
   end
 
 #   asks user what they want to do
  def main_menu
    options = ["View recipe book", "Search by ingredient", "Quit app"]
-   answer = @prompt.select("Choose an option:", (options))
-   while answer != "Quit app"
-     if answer == options[0]
-       select_recipe_from_book(@user.view_recipe_book)
-     else
-       find_recipe
-     end
-     answer = @prompt.select("Choose an option:", (options))
+   answer = @prompt.select("Choose an option:".colorize(:color => :blue), (options))
+   if answer == options[0]
+     select_recipe_from_book(@user.view_recipe_book)
+   elsif answer == options[1]
+     find_recipe
+   elsif answer == options[2]
+     puts ''
+     puts "Thanks for using Feed. See you next time!".colorize(:color => :blue)
+     system exit
    end
-   puts "Thanks for using Feed. See you next time!"
-  end
-
+end
 
  #   prompts user for search term and gets search term
    def search_ingredient
-     instruction = "Please enter ingredient name to search recipes: "
+     puts ''
+     instruction = "Please enter ingredient name to search recipes: ".colorize(:color => :blue)
      search_term = @prompt.ask(instruction)
      while search_term == nil
-       puts "Please enter a valid search term."
+       puts ''
+       puts "*** Please enter a valid search term. ***".colorize(:color => :red)
+       puts ''
        search_term = @prompt.ask(instruction)
      end
      @ing = search_term.downcase
@@ -86,7 +92,9 @@ class CLI
    def display_search_results
      rec_ing = recipe_ingredients
      while rec_ing.length == 0
-       puts "Sorry, that ingredient's not available."
+       puts ''
+       puts "*** Sorry, that ingredient's not available. ***".colorize(:color => :red)
+       puts ''
        search_ingredient
        rec_ing = recipe_ingredients
      end
@@ -96,7 +104,8 @@ class CLI
    #   prompts user to select a recipe from list of search results
    #   displays content of selected recipe
    def select_recipe_from_search(recipe_titles)
-     selection = @prompt.select("Please select a recipe:", (recipe_titles))
+     puts ''
+     selection = @prompt.select("Please select a recipe:".colorize(:color => :blue), (recipe_titles))
      @selected_rec = recipe_instances.find { |recipe| recipe.title == selection }
      puts @selected_rec.content
    end
@@ -104,18 +113,27 @@ class CLI
  #   Ask usr if they want to save
  #   Create new user recipe if yes
    def save?
-     ans = @prompt.select("Would you like to save this #{@selected_rec.title} recipe to your recipe book?", %w(Yes No))
+     puts ''
+     ans = @prompt.select("Would you like to save this #{@selected_rec.title} recipe to your recipe book?".colorize(:color => :blue), %w(Yes No))
      if ans == "Yes"
        @user.save_recipe(@selected_rec)
+       puts ''
+       main_menu
      end
+     puts ''
+     main_menu
    end
 
 #   prompts user to select a recipe from recipe book
 #   displays content of selected recipe
   def select_recipe_from_book(recipes)
     if recipes.length == 0
-      puts "You haven't saved any recipes."
+      puts ''
+      puts "*** You don't have any saved recipes. ***".colorize(:color => :red)
+      puts ''
+      main_menu
     else
+      puts ''
       options = [recipes, "Delete a recipe", "Back"]
       selection = @prompt.select("Your recipe book", (options))
       if selection == "Delete a recipe"
@@ -123,18 +141,22 @@ class CLI
       elsif selection == "Back"
         main_menu
       else
+        puts ''
         selected_user_rec = User.find(@id).recipes.find { |recipe| recipe.title == selection }
-        # binding.pry
         puts selected_user_rec.content
+        puts ''
+        main_menu
       end
     end
   end
 
 #   Prompts user to select a recipe to delete from their recipe book
   def select_recipe_to_delete(recipes)
+    puts ''
     delete_options = [recipes, "Back"]
-    ans = @prompt.select("Select a recipe to delete", (delete_options))
+    ans = @prompt.select("Select a recipe to delete".colorize(:color => :blue), (delete_options))
     if ans == "Back"
+      puts ''
       select_recipe_from_book(@user.view_recipe_book)
     else
       delete_me = @user.recipes.find { |recipe| recipe.title == ans }
@@ -155,7 +177,6 @@ class CLI
     find_or_create_user
     greet
     main_menu
-    # find_recipe
   end
 
 end
