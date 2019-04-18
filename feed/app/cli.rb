@@ -19,6 +19,7 @@ class CLI
       name = get_user_name
     end
     @user = User.find_or_create_by(name: name)
+    @id = @user.id
   end
 
 #   greets user
@@ -27,17 +28,20 @@ class CLI
   end
 
 #   asks user what they want to do
- def choose_option
+ def main_menu
    options = ["View recipe book", "Search by ingredient", "Quit app"]
    answer = @prompt.select("Choose an option:", (options))
-   if answer == options[0]
-     select_recipe_from_book(@user.view_recipe_book)
-   elsif answer == options[1]
-     find_recipe
-   else
-     puts "Thanks for using Feed. See you next time!"
+   while answer != "Quit app"
+     if answer == options[0]
+       select_recipe_from_book(@user.view_recipe_book)
+     else
+       find_recipe
+     end
+     answer = @prompt.select("Choose an option:", (options))
    end
- end
+   puts "Thanks for using Feed. See you next time!"
+  end
+
 
  #   prompts user for search term and gets search term
    def search_ingredient
@@ -91,7 +95,6 @@ class CLI
      if ans == "Yes"
        @user.save_recipe(@selected_rec)
      end
-     choose_option
    end
 
 #   prompts user to select a recipe from recipe book
@@ -99,18 +102,17 @@ class CLI
   def select_recipe_from_book(recipes)
     if recipes.length == 0
       puts "You haven't saved any recipes."
-      choose_option
     else
       options = [recipes, "Delete a recipe", "Back"]
       selection = @prompt.select("Your recipe book", (options))
       if selection == "Delete a recipe"
         select_recipe_to_delete(recipes)
       elsif selection == "Back"
-        choose_option
+        main_menu
       else
-        selected_user_rec = @user.user_recipes.find { |ur| ur.recipe.title == selection }
-        puts selected_user_rec.recipe.content
-        choose_option
+        selected_user_rec = User.find(@id).recipes.find { |recipe| recipe.title == selection }
+        # binding.pry
+        puts selected_user_rec.content
       end
     end
   end
@@ -138,7 +140,7 @@ class CLI
   def run
     find_or_create_user
     greet
-    choose_option
+    main_menu
     # find_recipe
   end
 
