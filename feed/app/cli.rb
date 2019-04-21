@@ -107,6 +107,7 @@ end
      puts ''
      selection = @prompt.select("Please select a recipe:".colorize(:color => :blue), (recipe_titles))
      @selected_rec = recipe_instances.find { |recipe| recipe.title == selection }
+     puts ''
      puts @selected_rec.content
    end
 
@@ -159,7 +160,7 @@ end
       puts ''
       select_recipe_from_book(@user.view_recipe_book)
     else
-      delete_me = @user.recipes.find { |recipe| recipe.title == ans }
+      delete_me = User.find(@id).recipes.find { |recipe| recipe.title == ans }
       @user.delete_recipe_from_book(delete_me)
       select_recipe_from_book(@user.view_recipe_book)
     end
